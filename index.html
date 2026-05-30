@@ -2,23 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>4riis | Terminal</title>
+  <title>4riis // System</title>
   <style>
-    :root { --red: #b91c1c; --bg: #050505; }
-    body { background: var(--bg); color: #d4d4d4; font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
-    /* Fondo granulado */
-    body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); opacity: 0.15; pointer-events: none; }
+    :root { --red: #dc2626; --bg: #050505; --text: #d4d4d4; }
+    body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
     
-    .window { border: 1px solid #333; width: 90%; max-width: 500px; background: #0a0a0a; }
-    .tabs { display: flex; border-bottom: 1px solid #333; }
-    .tab { padding: 10px 20px; cursor: pointer; border-right: 1px solid #333; }
-    .tab.active { background: var(--red); color: #fff; }
+    .window { width: 90%; max-width: 600px; border: 1px solid #222; background: #080808; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .tabs { display: flex; border-bottom: 1px solid #222; }
+    .tab { padding: 15px 20px; cursor: pointer; color: #555; font-size: 0.8rem; }
+    .tab.active { color: var(--red); border-bottom: 2px solid var(--red); }
     
-    .content { padding: 30px; }
-    h1 { color: var(--red); margin: 0 0 20px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
+    .content { padding: 30px; min-height: 300px; }
+    h1 { color: var(--red); font-size: 1.2rem; margin: 0 0 10px 0; }
     
-    .btn { display: block; color: #fff; text-decoration: none; border: 1px solid #444; padding: 12px; margin-bottom: 10px; transition: 0.3s; }
-    .btn:hover { border-color: var(--red); transform: translateX(5px); }
+    /* Typing Effect */
+    .typewriter { border-right: 2px solid var(--red); animation: blink 0.75s step-end infinite; }
+    @keyframes blink { 50% { border-color: transparent; } }
+    
+    .stack { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .tag { font-size: 0.7rem; border: 1px solid #333; padding: 4px 8px; color: #888; }
+    
+    .project-card { border: 1px solid #222; padding: 15px; margin-bottom: 10px; transition: 0.3s; }
+    .project-card:hover { border-color: var(--red); }
+    
+    .btn { display: inline-block; color: #fff; text-decoration: none; border: 1px solid var(--red); padding: 8px 15px; margin-right: 10px; font-size: 0.8rem; }
+    .btn:hover { background: var(--red); }
     
     .hidden { display: none; }
   </style>
@@ -27,34 +35,58 @@
 
 <div class="window">
   <div class="tabs">
-    <div class="tab active" onclick="show('home')">~/home</div>
-    <div class="tab" onclick="show('projects')">~/proyectos</div>
+    <div class="tab active" onclick="show('home')">~/root</div>
+    <div class="tab" onclick="show('about')">~/about</div>
+    <div class="tab" onclick="show('projects')">~/projects</div>
   </div>
   
   <div class="content">
     <div id="home">
-      <h1>4riis</h1>
-      <div class="btn"><a href="https://github.com/wzqdurl" target="_blank" style="color:white; text-decoration:none;">GitHub</a></div>
-      <div class="btn"><a href="https://discord.com/users/sleewpi." target="_blank" style="color:white; text-decoration:none;">Discord: sleewpi.</a></div>
-      <div class="btn"><a href="https://youtube.com/@sleepi" target="_blank" style="color:white; text-decoration:none;">YouTube: sleepi</a></div>
+      <h1>4riis // Terminal</h1>
+      <p class="typewriter" id="typing">Desarrollador, creador y entusiasta de sistemas.</p>
+      <div class="stack">
+        <span class="tag">JavaScript</span><span class="tag">HTML/CSS</span><span class="tag">Python</span><span class="tag">Linux</span>
+      </div>
+    </div>
+    
+    <div id="about" class="hidden">
+      <h1>Acerca de</h1>
+      <p>Creando experiencias digitales oscuras y eficientes. Enfocado en la estética y funcionalidad.</p>
     </div>
     
     <div id="projects" class="hidden">
-      <h1>Proyectos</h1>
-      <p style="color:#666;">> Cargando repositorio...</p>
-      <div class="btn">Sitio en desarrollo...</div>
+      <h1>Proyectos Recientes</h1>
+      <div class="project-card">
+        <h3>Sistema Portfolio</h3>
+        <p style="font-size: 0.8rem; color: #777;">Diseño de interfaz minimalista tipo consola.</p>
+      </div>
+      <div class="project-card">
+        <h3>Experimental</h3>
+        <p style="font-size: 0.8rem; color: #777;">Proyectos en desarrollo bajo perfil.</p>
+      </div>
+      <a href="https://github.com/wzqdurl" class="btn" target="_blank">Ver más en GitHub</a>
     </div>
   </div>
 </div>
 
 <script>
   function show(id) {
-    document.getElementById('home').classList.add('hidden');
-    document.getElementById('projects').classList.add('hidden');
+    document.querySelectorAll('.content > div').forEach(d => d.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
   }
+  // Typing animation
+  const text = "Desarrollador, creador y entusiasta de sistemas.";
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      document.getElementById('typing').innerHTML = text.substring(0, i+1);
+      i++;
+      setTimeout(type, 50);
+    }
+  }
+  type();
 </script>
 </body>
 </html>
