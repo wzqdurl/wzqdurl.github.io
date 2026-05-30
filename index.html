@@ -8,17 +8,18 @@
   <title>4riis - sleewpi room</title>
   <style>
     :root {
-      --bg: #050506;
-      --panel: #0b0b0d;
-      --panel-2: #111113;
+      --bg: #030303;
+      --panel: #090909;
+      --panel-2: #111111;
       --line: rgba(255, 255, 255, 0.1);
       --line-soft: rgba(255, 255, 255, 0.06);
       --text: #f2f0ee;
-      --muted: #9a9696;
-      --dim: #5f5a5d;
-      --red: #d23a3d;
-      --red-dark: #63171d;
-      --red-soft: rgba(210, 58, 61, 0.16);
+      --muted: #928b8b;
+      --dim: #5c5557;
+      --red: #e01822;
+      --red-deep: #7b0610;
+      --red-dark: #3f0509;
+      --red-soft: rgba(224, 24, 34, 0.18);
       --white-soft: rgba(242, 240, 238, 0.72);
       --shadow: rgba(0, 0, 0, 0.66);
     }
@@ -32,9 +33,10 @@
       margin: 0;
       color: var(--text);
       background:
-        radial-gradient(circle at 50% 18%, rgba(99, 16, 22, 0.32), transparent 28%),
+        radial-gradient(circle at 50% 18%, rgba(123, 6, 16, 0.48), transparent 28%),
+        radial-gradient(circle at 18% 72%, rgba(224, 24, 34, 0.12), transparent 24%),
         radial-gradient(circle at 84% 82%, rgba(255, 255, 255, 0.04), transparent 28%),
-        linear-gradient(120deg, #050506, #0a0a0c 44%, #030304);
+        linear-gradient(120deg, #020202, #090909 44%, #030303);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       overflow-x: hidden;
       cursor: crosshair;
@@ -74,8 +76,8 @@
       margin: 28px auto;
       border: 1px solid var(--line);
       border-radius: 18px;
-      background: rgba(9, 9, 10, 0.78);
-      box-shadow: 0 30px 120px rgba(0, 0, 0, 0.76), inset 0 1px rgba(255, 255, 255, 0.04);
+      background: rgba(7, 7, 8, 0.82);
+      box-shadow: 0 30px 120px rgba(0, 0, 0, 0.82), 0 0 80px rgba(123, 6, 16, 0.16), inset 0 1px rgba(255, 255, 255, 0.04);
       overflow: hidden;
       backdrop-filter: blur(18px);
     }
@@ -88,7 +90,7 @@
       gap: 18px;
       padding: 0 18px;
       border-bottom: 1px solid var(--line-soft);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(40, 3, 6, 0.14));
     }
 
     .traffic {
@@ -235,6 +237,7 @@
     }
 
     .profile-card {
+      position: relative;
       max-width: 1180px;
       margin: 0 auto;
       border: 1px solid var(--line);
@@ -246,13 +249,68 @@
       box-shadow: 0 18px 70px rgba(0, 0, 0, 0.5), inset 0 1px rgba(255, 255, 255, 0.035);
     }
 
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 270px;
+      height: 70px;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 18% 0%, rgba(224, 24, 34, 0.55) 0 7px, transparent 8px),
+        radial-gradient(ellipse at 32% 0%, rgba(123, 6, 16, 0.55) 0 5px, transparent 6px),
+        radial-gradient(ellipse at 71% 0%, rgba(224, 24, 34, 0.42) 0 6px, transparent 7px),
+        linear-gradient(180deg, rgba(224, 24, 34, 0.28), transparent 62%);
+      mask-image:
+        linear-gradient(90deg, transparent 0 9%, black 14% 36%, transparent 42% 61%, black 66% 78%, transparent 88%),
+        linear-gradient(180deg, black, transparent);
+      opacity: 0.56;
+      filter: blur(0.2px);
+    }
+
+    .blood-drips {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 74px;
+      z-index: 4;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blood-drips span {
+      position: absolute;
+      top: 0;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(224, 24, 34, 0.8), rgba(63, 5, 9, 0.02));
+      box-shadow: 0 0 14px rgba(224, 24, 34, 0.28);
+      transform-origin: top;
+      animation: drip 4.8s ease-in-out infinite;
+    }
+
+    .blood-drips span:nth-child(1) { left: 12%; height: 34px; animation-delay: -0.6s; }
+    .blood-drips span:nth-child(2) { left: 27%; height: 52px; animation-delay: -2.1s; }
+    .blood-drips span:nth-child(3) { left: 48%; height: 26px; animation-delay: -1.2s; }
+    .blood-drips span:nth-child(4) { left: 68%; height: 46px; animation-delay: -2.8s; }
+    .blood-drips span:nth-child(5) { left: 84%; height: 30px; animation-delay: -3.5s; }
+
+    @keyframes drip {
+      0%, 100% { opacity: 0.35; transform: scaleY(0.72); }
+      45% { opacity: 0.85; transform: scaleY(1.08); }
+    }
+
     .banner {
       position: relative;
       min-height: 270px;
       overflow: hidden;
       border-bottom: 1px solid var(--line-soft);
       background:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18)),
+        radial-gradient(circle at 52% 54%, rgba(224, 24, 34, 0.18), transparent 24%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.36)),
         url("banner.png") center / cover no-repeat,
         linear-gradient(125deg, #060607, #10090a 48%, #060607);
     }
@@ -362,10 +420,26 @@
       margin: 0 auto 12px;
       border-radius: 50%;
       padding: 8px;
-      background: radial-gradient(circle, #0b0b0d 55%, #18080a 66%, #040404 100%);
-      border: 1px solid rgba(210, 58, 61, 0.35);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 34px rgba(210, 58, 61, 0.16);
+      background: radial-gradient(circle, #0b0b0d 55%, #220307 66%, #040404 100%);
+      border: 1px solid rgba(224, 24, 34, 0.55);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.62), 0 0 42px rgba(224, 24, 34, 0.28);
       z-index: 3;
+    }
+
+    .avatar-wrap::before {
+      content: "";
+      position: absolute;
+      left: 25%;
+      right: 25%;
+      bottom: -22px;
+      height: 38px;
+      border-radius: 0 0 999px 999px;
+      background:
+        linear-gradient(90deg, transparent 0 20%, rgba(224, 24, 34, 0.75) 21% 24%, transparent 25% 45%, rgba(123, 6, 16, 0.7) 46% 50%, transparent 51% 100%),
+        linear-gradient(180deg, rgba(224, 24, 34, 0.22), transparent 70%);
+      filter: blur(0.25px);
+      opacity: 0.72;
+      pointer-events: none;
     }
 
     .avatar {
@@ -373,25 +447,21 @@
       height: 100%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 57px 70px, #060606 0 18px, transparent 19px),
-        radial-gradient(circle at 104px 70px, #060606 0 18px, transparent 19px),
-        radial-gradient(circle at 58px 70px, rgba(210, 58, 61, 0.45) 0 10px, transparent 11px),
-        radial-gradient(circle at 105px 70px, rgba(210, 58, 61, 0.45) 0 10px, transparent 11px),
-        linear-gradient(135deg, transparent 0 42%, #090909 43% 56%, transparent 57%) 42px 18px/32px 62px no-repeat,
-        linear-gradient(225deg, transparent 0 42%, #090909 43% 56%, transparent 57%) 92px 18px/32px 62px no-repeat,
-        radial-gradient(circle at 50% 72%, #eeeae3 0 50px, transparent 51px),
-        linear-gradient(#090909 0 0) 42px 22px/82px 46px no-repeat,
+        linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.2)),
+        url("avatar.jpg") center / cover no-repeat,
         #0a0a0b;
       position: relative;
       overflow: hidden;
-      image-rendering: pixelated;
+      image-rendering: auto;
     }
 
     .avatar::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(255, 255, 255, 0.06) 8px 9px);
+      background:
+        repeating-linear-gradient(0deg, transparent 0 7px, rgba(255, 255, 255, 0.055) 8px 9px),
+        radial-gradient(circle at 50% 50%, transparent 0 55%, rgba(224, 24, 34, 0.16) 72%, rgba(0, 0, 0, 0.25) 100%);
       mix-blend-mode: overlay;
     }
 
@@ -432,7 +502,7 @@
       font: 800 clamp(38px, 6vw, 54px)/0.95 "Courier New", monospace;
       letter-spacing: -0.08em;
       color: var(--text);
-      text-shadow: 3px 0 rgba(210, 58, 61, 0.7), -2px 0 rgba(255, 255, 255, 0.18);
+      text-shadow: 3px 0 rgba(224, 24, 34, 0.86), -2px 0 rgba(255, 255, 255, 0.16), 0 0 24px rgba(123, 6, 16, 0.42);
     }
 
     .username {
@@ -465,6 +535,7 @@
     }
 
     .action {
+      position: relative;
       min-width: 144px;
       min-height: 46px;
       display: inline-flex;
@@ -481,6 +552,17 @@
       transition: 180ms ease;
       cursor: pointer;
       box-shadow: inset 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .action::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: -1px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(224, 24, 34, 0.75), transparent);
+      opacity: 0.65;
     }
 
     .action:hover {
@@ -770,6 +852,7 @@
       <main class="content" id="top">
         <section class="profile-card">
           <div class="banner">
+            <div class="blood-drips" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
             <div class="scribble one"></div>
             <div class="scribble two"></div>
             <div class="spark s1">×</div>
