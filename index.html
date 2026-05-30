@@ -2,91 +2,778 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>4riis // System</title>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="sleewpi room - digital ghost profile by 4riis">
+  <title>4riis - sleewpi room</title>
   <style>
-    :root { --red: #dc2626; --bg: #050505; --text: #d4d4d4; }
-    body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    
-    .window { width: 90%; max-width: 600px; border: 1px solid #222; background: #080808; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .tabs { display: flex; border-bottom: 1px solid #222; }
-    .tab { padding: 15px 20px; cursor: pointer; color: #555; font-size: 0.8rem; }
-    .tab.active { color: var(--red); border-bottom: 2px solid var(--red); }
-    
-    .content { padding: 30px; min-height: 300px; }
-    h1 { color: var(--red); font-size: 1.2rem; margin: 0 0 10px 0; }
-    
-    /* Typing Effect */
-    .typewriter { border-right: 2px solid var(--red); animation: blink 0.75s step-end infinite; }
-    @keyframes blink { 50% { border-color: transparent; } }
-    
-    .stack { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-    .tag { font-size: 0.7rem; border: 1px solid #333; padding: 4px 8px; color: #888; }
-    
-    .project-card { border: 1px solid #222; padding: 15px; margin-bottom: 10px; transition: 0.3s; }
-    .project-card:hover { border-color: var(--red); }
-    
-    .btn { display: inline-block; color: #fff; text-decoration: none; border: 1px solid var(--red); padding: 8px 15px; margin-right: 10px; font-size: 0.8rem; }
-    .btn:hover { background: var(--red); }
-    
-    .hidden { display: none; }
+    :root {
+      --bg: #050507;
+      --panel: rgba(11, 13, 16, 0.82);
+      --panel-strong: #0b0d10;
+      --line: rgba(232, 232, 232, 0.13);
+      --text: #f2f2f2;
+      --muted: #8a8a8a;
+      --blue: #5b8cff;
+      --cyan: #7ee6e6;
+      --red: #8b1e2d;
+      --green: #2c5f4a;
+      --shadow: rgba(0, 0, 0, 0.55);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 14% 22%, rgba(91, 140, 255, 0.13), transparent 28%),
+        radial-gradient(circle at 86% 18%, rgba(44, 95, 74, 0.18), transparent 32%),
+        radial-gradient(circle at 55% 92%, rgba(139, 30, 45, 0.14), transparent 28%),
+        linear-gradient(145deg, #030305, #06070a 48%, #020203);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      cursor: crosshair;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: radial-gradient(circle at center, black 20%, transparent 78%);
+    }
+
+    body::after {
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    .floaters {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .pixel {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(126, 230, 230, 0.38);
+      box-shadow: 0 0 12px rgba(126, 230, 230, 0.32);
+      animation: drift 12s linear infinite;
+    }
+
+    .pixel:nth-child(1) { left: 7%; top: 74%; animation-duration: 18s; }
+    .pixel:nth-child(2) { left: 18%; top: 22%; animation-duration: 14s; background: rgba(91, 140, 255, 0.44); }
+    .pixel:nth-child(3) { left: 76%; top: 66%; animation-duration: 19s; background: rgba(139, 30, 45, 0.5); }
+    .pixel:nth-child(4) { left: 88%; top: 28%; animation-duration: 16s; }
+    .pixel:nth-child(5) { left: 46%; top: 84%; animation-duration: 21s; background: rgba(232, 232, 232, 0.3); }
+    .pixel:nth-child(6) { left: 61%; top: 12%; animation-duration: 15s; background: rgba(44, 95, 74, 0.55); }
+
+    @keyframes drift {
+      0% { transform: translate3d(0, 26px, 0); opacity: 0; }
+      20%, 80% { opacity: 1; }
+      100% { transform: translate3d(28px, -110px, 0); opacity: 0; }
+    }
+
+    .room {
+      position: relative;
+      z-index: 2;
+      width: min(94vw, 760px);
+      margin: 28px auto;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: 0 28px 100px var(--shadow), inset 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      backdrop-filter: blur(18px);
+    }
+
+    .room::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(120deg, transparent 0 28%, rgba(255, 255, 255, 0.08) 42%, transparent 58% 100%);
+      transform: translateX(-78%);
+      animation: scan 9s ease-in-out infinite;
+    }
+
+    @keyframes scan {
+      0%, 46% { transform: translateX(-88%); opacity: 0; }
+      58% { opacity: 0.45; }
+      72%, 100% { transform: translateX(88%); opacity: 0; }
+    }
+
+    .banner {
+      position: relative;
+      min-height: 210px;
+      padding: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 26% 34%, rgba(126, 230, 230, 0.2), transparent 20%),
+        radial-gradient(circle at 74% 22%, rgba(91, 140, 255, 0.22), transparent 28%),
+        radial-gradient(circle at 62% 92%, rgba(139, 30, 45, 0.24), transparent 25%),
+        linear-gradient(140deg, #07090d, #101722 48%, #050506);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.2;
+      background:
+        linear-gradient(transparent 50%, rgba(255, 255, 255, 0.035) 50%),
+        linear-gradient(90deg, transparent 72%, rgba(126, 230, 230, 0.09) 73%, transparent 74%);
+      background-size: 100% 4px, 72px 100%;
+      animation: vhs 4s steps(2) infinite;
+    }
+
+    @keyframes vhs {
+      0%, 100% { transform: translateY(0); }
+      45% { transform: translateY(2px); }
+      48% { transform: translateY(-2px); }
+    }
+
+    .cloud {
+      position: absolute;
+      width: 210px;
+      height: 70px;
+      border-radius: 999px;
+      filter: blur(18px);
+      opacity: 0.2;
+      background: #d7e7ff;
+      animation: cloud 18s ease-in-out infinite;
+    }
+
+    .cloud.one { left: -48px; top: 56px; }
+    .cloud.two { right: -60px; top: 104px; animation-delay: -7s; background: #b7fff4; }
+
+    @keyframes cloud {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(42px); }
+    }
+
+    .wing {
+      position: absolute;
+      width: 128px;
+      height: 80px;
+      opacity: 0.22;
+      border: 1px solid rgba(255, 255, 255, 0.56);
+      border-right: 0;
+      border-radius: 100% 0 0 100%;
+      transform: rotate(-18deg);
+    }
+
+    .wing::before,
+    .wing::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-right: 0;
+      border-radius: 100% 0 0 100%;
+    }
+
+    .wing::before { top: 16px; width: 88px; height: 48px; }
+    .wing::after { top: 34px; width: 54px; height: 28px; }
+    .wing.left { left: 82px; bottom: 34px; }
+    .wing.right { right: 72px; top: 24px; transform: rotate(162deg) scaleY(-1); }
+
+    .cat-shadow {
+      position: absolute;
+      right: 48px;
+      bottom: 30px;
+      width: 72px;
+      height: 58px;
+      opacity: 0.42;
+      filter: drop-shadow(0 0 16px rgba(126, 230, 230, 0.18));
+    }
+
+    .cat-shadow::before {
+      content: "";
+      position: absolute;
+      inset: 14px 8px 0;
+      background: #020202;
+      border-radius: 42% 42% 32% 32%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cat-shadow::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 2px;
+      width: 36px;
+      height: 28px;
+      background: linear-gradient(135deg, #020202 0 44%, transparent 45%), linear-gradient(225deg, #020202 0 44%, transparent 45%);
+      background-size: 50% 100%;
+      background-repeat: no-repeat;
+      background-position: left, right;
+    }
+
+    .eyes {
+      position: absolute;
+      right: 75px;
+      bottom: 58px;
+      width: 22px;
+      height: 7px;
+      background: radial-gradient(circle at 4px 3px, #f8fff8 0 2px, transparent 3px), radial-gradient(circle at 17px 3px, #f8fff8 0 2px, transparent 3px);
+      animation: blink-eyes 5s infinite;
+    }
+
+    @keyframes blink-eyes {
+      0%, 92%, 100% { transform: scaleY(1); }
+      94% { transform: scaleY(0.12); }
+    }
+
+    .banner-copy {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      height: 162px;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .system-line {
+      align-self: flex-start;
+      padding: 7px 10px;
+      border: 1px solid rgba(232, 232, 232, 0.1);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.22);
+      color: rgba(242, 242, 242, 0.68);
+      font: 12px/1.2 "Courier New", monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .banner-title { align-self: flex-start; }
+
+    .glitch-title {
+      position: relative;
+      display: inline-block;
+      margin: 0;
+      font: 800 clamp(44px, 10vw, 82px)/0.85 "Courier New", monospace;
+      letter-spacing: -0.08em;
+      color: var(--text);
+      text-shadow: 3px 0 rgba(126, 230, 230, 0.3), -3px 0 rgba(139, 30, 45, 0.38);
+      animation: titleShift 5.4s infinite;
+    }
+
+    .glitch-title::before,
+    .glitch-title::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .glitch-title::before { color: var(--cyan); transform: translate(2px, -1px); }
+    .glitch-title::after { color: var(--red); transform: translate(-2px, 1px); }
+
+    .glitch-title:hover::before,
+    .glitch-title:hover::after { opacity: 0.8; }
+
+    @keyframes titleShift {
+      0%, 100% { transform: translateX(0); }
+      48% { transform: translateX(0); }
+      49% { transform: translateX(2px); }
+      50% { transform: translateX(-2px); }
+      51% { transform: translateX(0); }
+    }
+
+    .handle {
+      margin: 11px 0 0;
+      color: rgba(242, 242, 242, 0.7);
+      font: 13px/1.3 "Courier New", monospace;
+    }
+
+    .profile {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      padding: 0 24px 22px;
+      margin-top: -42px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .avatar {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      border-radius: 26px;
+      background: #f0f0eb;
+      border: 3px solid rgba(255, 255, 255, 0.84);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55), 0 0 0 5px rgba(11, 13, 16, 0.75);
+      image-rendering: pixelated;
+      overflow: hidden;
+      transform: rotate(-2deg);
+    }
+
+    .avatar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, transparent 0 12px, #111 13px 36px, transparent 37px),
+        linear-gradient(225deg, transparent 0 12px, #111 13px 36px, transparent 37px),
+        radial-gradient(circle at 38px 53px, #050505 0 7px, transparent 8px),
+        radial-gradient(circle at 66px 53px, #050505 0 7px, transparent 8px),
+        linear-gradient(#050505 0 0) 29px 70px/45px 5px no-repeat,
+        radial-gradient(circle at 50% 66%, #fff 0 45px, transparent 46px);
+      background-repeat: no-repeat;
+    }
+
+    .avatar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0 6px, rgba(0, 0, 0, 0.06) 7px 8px);
+      mix-blend-mode: multiply;
+    }
+
+    .identity {
+      padding-top: 54px;
+      min-width: 0;
+    }
+
+    .identity h2 {
+      margin: 0;
+      font: 700 26px/1 "Courier New", monospace;
+      letter-spacing: -0.05em;
+    }
+
+    .identity p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .quote {
+      display: inline-flex;
+      margin-top: 12px;
+      padding: 8px 10px;
+      border: 1px dashed rgba(232, 232, 232, 0.17);
+      border-radius: 12px;
+      color: rgba(126, 230, 230, 0.8);
+      background: rgba(126, 230, 230, 0.04);
+      font: 12px/1.2 "Courier New", monospace;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      padding: 18px 24px 0;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.025);
+      color: rgba(242, 242, 242, 0.62);
+      font: 12px/1 "Courier New", monospace;
+      cursor: pointer;
+      transition: 170ms ease;
+    }
+
+    .tab:hover,
+    .tab.active {
+      color: var(--text);
+      border-color: rgba(126, 230, 230, 0.36);
+      background: rgba(126, 230, 230, 0.075);
+      transform: translateY(-1px);
+    }
+
+    .page {
+      display: none;
+      padding: 22px 24px 26px;
+      animation: pageIn 260ms ease both;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card,
+    .link-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.028);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .card { padding: 16px; }
+
+    .card h3 {
+      margin: 0 0 9px;
+      color: var(--text);
+      font: 700 13px/1.1 "Courier New", monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .card p,
+    .card li {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .card ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: rgba(242, 242, 242, 0.7);
+      font: 12px/1.2 "Courier New", monospace;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(44, 95, 74, 0.9);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.65; }
+      50% { transform: scale(1.35); opacity: 1; }
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .link-card {
+      position: relative;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-height: 72px;
+      padding: 14px;
+      color: var(--text);
+      text-decoration: none;
+      overflow: hidden;
+      transition: 180ms ease;
+    }
+
+    .link-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(126, 230, 230, 0.08), transparent);
+      transform: translateX(-110%);
+      transition: 240ms ease;
+    }
+
+    .link-card:hover {
+      transform: translateY(-2px) skewX(-1deg);
+      border-color: rgba(126, 230, 230, 0.32);
+      background: rgba(126, 230, 230, 0.045);
+    }
+
+    .link-card:hover::after { transform: translateX(110%); }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(232, 232, 232, 0.16);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.18);
+      color: var(--cyan);
+      font: 700 15px/1 "Courier New", monospace;
+    }
+
+    .link-card strong {
+      display: block;
+      font: 700 13px/1.2 "Courier New", monospace;
+    }
+
+    .link-card span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .copy-button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      min-height: 72px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.028);
+      color: var(--text);
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+      transition: 180ms ease;
+    }
+
+    .copy-button:hover {
+      border-color: rgba(91, 140, 255, 0.34);
+      transform: translateY(-2px);
+    }
+
+    .copy-button strong { display: block; font: 700 13px/1.2 "Courier New", monospace; }
+    .copy-button span { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+
+    .terminal {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid rgba(139, 30, 45, 0.27);
+      border-radius: 18px;
+      background: rgba(0, 0, 0, 0.24);
+      color: rgba(242, 242, 242, 0.72);
+      font: 12px/1.55 "Courier New", monospace;
+    }
+
+    .terminal b { color: var(--cyan); font-weight: 400; }
+    .terminal em { color: rgba(139, 30, 45, 0.95); font-style: normal; }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 24px 18px;
+      border-top: 1px solid var(--line);
+      color: rgba(242, 242, 242, 0.38);
+      font: 11px/1.2 "Courier New", monospace;
+    }
+
+    @media (max-width: 620px) {
+      body { place-items: start center; }
+      .room { margin: 14px auto; border-radius: 22px; }
+      .banner { min-height: 190px; padding: 18px; }
+      .profile { grid-template-columns: 1fr; gap: 12px; padding: 0 18px 18px; }
+      .identity { padding-top: 0; }
+      .avatar { width: 92px; height: 92px; }
+      .grid,
+      .links { grid-template-columns: 1fr; }
+      .nav,
+      .page,
+      .footer { padding-left: 18px; padding-right: 18px; }
+      .footer { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
-
-<div class="window">
-  <div class="tabs">
-    <div class="tab active" onclick="show('home')">~/root</div>
-    <div class="tab" onclick="show('about')">~/about</div>
-    <div class="tab" onclick="show('projects')">~/projects</div>
+  <div class="floaters" aria-hidden="true">
+    <span class="pixel"></span>
+    <span class="pixel"></span>
+    <span class="pixel"></span>
+    <span class="pixel"></span>
+    <span class="pixel"></span>
+    <span class="pixel"></span>
   </div>
-  
-  <div class="content">
-    <div id="home">
-      <h1>4riis // Terminal</h1>
-      <p class="typewriter" id="typing">Desarrollador, creador y entusiasta de sistemas.</p>
-      <div class="stack">
-        <span class="tag">JavaScript</span><span class="tag">HTML/CSS</span><span class="tag">Python</span><span class="tag">Linux</span>
-      </div>
-    </div>
-    
-    <div id="about" class="hidden">
-      <h1>Acerca de</h1>
-      <p>Creando experiencias digitales oscuras y eficientes. Enfocado en la estética y funcionalidad.</p>
-    </div>
-    
-    <div id="projects" class="hidden">
-      <h1>Proyectos Recientes</h1>
-      <div class="project-card">
-        <h3>Sistema Portfolio</h3>
-        <p style="font-size: 0.8rem; color: #777;">Diseño de interfaz minimalista tipo consola.</p>
-      </div>
-      <div class="project-card">
-        <h3>Experimental</h3>
-        <p style="font-size: 0.8rem; color: #777;">Proyectos en desarrollo bajo perfil.</p>
-      </div>
-      <a href="https://github.com/wzqdurl" class="btn" target="_blank">Ver más en GitHub</a>
-    </div>
-  </div>
-</div>
 
-<script>
-  function show(id) {
-    document.querySelectorAll('.content > div').forEach(d => d.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-  }
-  // Typing animation
-  const text = "Desarrollador, creador y entusiasta de sistemas.";
-  let i = 0;
-  function type() {
-    if (i < text.length) {
-      document.getElementById('typing').innerHTML = text.substring(0, i+1);
-      i++;
-      setTimeout(type, 50);
+  <main class="room" aria-label="sleewpi room profile">
+    <section class="banner">
+      <div class="cloud one"></div>
+      <div class="cloud two"></div>
+      <div class="wing left"></div>
+      <div class="wing right"></div>
+      <div class="cat-shadow"></div>
+      <div class="eyes"></div>
+      <div class="banner-copy">
+        <div class="system-line">sleewpi room / corrupted dream profile</div>
+        <div class="banner-title">
+          <h1 class="glitch-title" data-text="4riis">4riis</h1>
+          <p class="handle">@sleewpi - sleepy web ghost</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile">
+      <div class="avatar" aria-label="pixel cat avatar"></div>
+      <div class="identity">
+        <h2>4riis</h2>
+        <p>sleepy profile / broken angel / online ghost</p>
+        <span class="quote" id="randomQuote">still loading...</span>
+      </div>
+    </section>
+
+    <nav class="nav" aria-label="profile sections">
+      <button class="tab active" data-page="home">home.exe</button>
+      <button class="tab" data-page="links">links.log</button>
+      <button class="tab" data-page="about">about.txt</button>
+      <button class="tab" data-page="status">status.sys</button>
+    </nav>
+
+    <section class="page active" id="home">
+      <div class="grid">
+        <article class="card">
+          <h3>mini bio</h3>
+          <p>18 / cr<br>sleepy dev<br>roblox, music, random projects<br>mostly online</p>
+        </article>
+        <article class="card">
+          <h3>current mood</h3>
+          <p>half asleep, building strange things nobody asked for.</p>
+          <div class="status-line"><span class="dot"></span> sleewpi is online</div>
+        </article>
+      </div>
+      <div class="terminal">
+        <b>&gt;</b> entering room...<br>
+        <b>&gt;</b> loading cats, wings and broken pixels<br>
+        <em>warning:</em> dream file may be corrupted
+      </div>
+    </section>
+
+    <section class="page" id="links">
+      <div class="links">
+        <a class="link-card" href="https://github.com/wzqdurl" target="_blank" rel="noopener">
+          <span class="icon">GH</span>
+          <span><strong>github.log</strong><span>wzqdurl</span></span>
+        </a>
+        <a class="link-card" href="https://youtube.com/@sleewpi" target="_blank" rel="noopener">
+          <span class="icon">YT</span>
+          <span><strong>youtube.vhs</strong><span>@sleewpi</span></span>
+        </a>
+        <button class="copy-button" id="copyDiscord" type="button">
+          <strong>discord.exe</strong>
+          <span>click to copy: sleewpi.</span>
+        </button>
+        <a class="link-card" href="https://4riis.surge.sh" target="_blank" rel="noopener">
+          <span class="icon">4R</span>
+          <span><strong>room.url</strong><span>4riis.surge.sh</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="page" id="about">
+      <div class="grid">
+        <article class="card">
+          <h3>about me</h3>
+          <p>i make random projects, roblox stuff, discord things and sometimes disappear.</p>
+        </article>
+        <article class="card">
+          <h3>stack / tools</h3>
+          <ul>
+            <li>html / css / javascript</li>
+            <li>roblox studio</li>
+            <li>discord communities</li>
+            <li>dark interfaces</li>
+          </ul>
+        </article>
+      </div>
+      <div class="terminal">
+        <b>&gt;</b> identity: digital ghost<br>
+        <b>&gt;</b> location: somewhere online<br>
+        <b>&gt;</b> aesthetic: cat angel glitch room
+      </div>
+    </section>
+
+    <section class="page" id="status">
+      <div class="grid">
+        <article class="card">
+          <h3>status</h3>
+          <p>currently building something.</p>
+          <div class="status-line"><span class="dot"></span> mood: half asleep</div>
+        </article>
+        <article class="card">
+          <h3>listening</h3>
+          <p>night music, loops, memories and random playlists.</p>
+        </article>
+      </div>
+      <div class="terminal" id="clockLine">
+        <b>&gt;</b> syncing room clock...
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>sleewpi room - no normal profile found</span>
+      <span>v4.riis / corrupted but alive</span>
+    </footer>
+  </main>
+
+  <script>
+    const phrases = [
+      "don't wake me up",
+      "still loading...",
+      "failed, but cute",
+      "sleewpi is online",
+      "found you",
+      "corrupted dream saved",
+      "sleepy web ghost"
+    ];
+
+    const quote = document.getElementById("randomQuote");
+    quote.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+
+    document.querySelectorAll(".tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+        document.querySelectorAll(".page").forEach((page) => page.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.page).classList.add("active");
+      });
+    });
+
+    document.getElementById("copyDiscord").addEventListener("click", async (event) => {
+      try {
+        await navigator.clipboard.writeText("sleewpi.");
+        event.currentTarget.querySelector("span").textContent = "copied: sleewpi.";
+      } catch {
+        event.currentTarget.querySelector("span").textContent = "discord: sleewpi.";
+      }
+    });
+
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      document.getElementById("clockLine").innerHTML = `<b>&gt;</b> local ghost time: ${time}<br><b>&gt;</b> room process: active`;
     }
-  }
-  type();
-</script>
+
+    updateClock();
+    setInterval(updateClock, 30000);
+  </script>
 </body>
 </html>
