@@ -1547,6 +1547,12 @@
 
       if (form.get("website")) return;
 
+      if (localStorage.getItem("guestbook:signed") === "true") {
+        guestbookStatus.textContent = "you already signed this guestbook.";
+        guestbookSubmit.disabled = true;
+        return;
+      }
+
       const lastPost = Number(localStorage.getItem("guestbook:lastPost") || 0);
       if (Date.now() - lastPost < 30000) {
         guestbookStatus.textContent = "slow down, ghost. try again in a bit.";
@@ -1574,7 +1580,9 @@
 
         if (!response.ok) throw new Error("insert failed");
         localStorage.setItem("guestbook:lastPost", String(Date.now()));
+        localStorage.setItem("guestbook:signed", "true");
         guestbookForm.reset();
+        guestbookSubmit.disabled = true;
         await loadGuestbook();
       } catch {
         guestbookStatus.textContent = "could not sign - database setup pending.";
@@ -1772,6 +1780,10 @@
     buildPlaylist();
     guestbookForm.addEventListener("submit", signGuestbook);
     loadGuestbook();
+    if (localStorage.getItem("guestbook:signed") === "true") {
+      guestbookSubmit.disabled = true;
+      guestbookStatus.textContent = "you already signed this guestbook.";
+    }
     loadDiscordPresence();
     setInterval(loadDiscordPresence, 30000);
   </script>
