@@ -2,44 +2,59 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>4riis</title>
+  <title>4riis | Terminal</title>
   <style>
-    :root { --red: #b91c1c; --bg: #050505; --text: #d4d4d4; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Courier New', Courier, monospace;
-      margin: 0; padding: 20px;
-      display: flex; flex-direction: column; align-items: center;
-      min-height: 100vh;
-    }
-    .container { max-width: 500px; width: 100%; text-align: center; border: 1px solid #222; padding: 40px; margin-top: 50px; }
-    h1 { color: var(--red); font-size: 2rem; margin-bottom: 5px; }
-    .bio { font-size: 0.9rem; color: #71717a; margin-bottom: 30px; }
-    .links { display: flex; flex-direction: column; gap: 15px; }
-    a {
-      display: block;
-      color: #fff;
-      text-decoration: none;
-      border: 1px solid var(--red);
-      padding: 12px;
-      transition: 0.3s;
-    }
-    a:hover { background: var(--red); color: #000; }
-    .glitch { animation: glitch 2s infinite; }
-    @keyframes glitch { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+    :root { --red: #b91c1c; --bg: #050505; }
+    body { background: var(--bg); color: #d4d4d4; font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+    /* Fondo granulado */
+    body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); opacity: 0.15; pointer-events: none; }
+    
+    .window { border: 1px solid #333; width: 90%; max-width: 500px; background: #0a0a0a; }
+    .tabs { display: flex; border-bottom: 1px solid #333; }
+    .tab { padding: 10px 20px; cursor: pointer; border-right: 1px solid #333; }
+    .tab.active { background: var(--red); color: #fff; }
+    
+    .content { padding: 30px; }
+    h1 { color: var(--red); margin: 0 0 20px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .btn { display: block; color: #fff; text-decoration: none; border: 1px solid #444; padding: 12px; margin-bottom: 10px; transition: 0.3s; }
+    .btn:hover { border-color: var(--red); transform: translateX(5px); }
+    
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="container glitch">
-    <h1>4riis</h1>
-    <p class="bio">Experimentando con sistemas / Dev & Creator</p>
-    <div class="links">
-      <a href="https://github.com/wzqdurl" target="_blank">GitHub</a>
-      <a href="https://discord.com/users/sleewpi." target="_blank">Discord: sleewpi.</a>
-      <a href="https://youtube.com/@sleepi" target="_blank">YouTube: sleepi</a>
+
+<div class="window">
+  <div class="tabs">
+    <div class="tab active" onclick="show('home')">~/home</div>
+    <div class="tab" onclick="show('projects')">~/proyectos</div>
+  </div>
+  
+  <div class="content">
+    <div id="home">
+      <h1>4riis</h1>
+      <div class="btn"><a href="https://github.com/wzqdurl" target="_blank" style="color:white; text-decoration:none;">GitHub</a></div>
+      <div class="btn"><a href="https://discord.com/users/sleewpi." target="_blank" style="color:white; text-decoration:none;">Discord: sleewpi.</a></div>
+      <div class="btn"><a href="https://youtube.com/@sleepi" target="_blank" style="color:white; text-decoration:none;">YouTube: sleepi</a></div>
+    </div>
+    
+    <div id="projects" class="hidden">
+      <h1>Proyectos</h1>
+      <p style="color:#666;">> Cargando repositorio...</p>
+      <div class="btn">Sitio en desarrollo...</div>
     </div>
   </div>
+</div>
+
+<script>
+  function show(id) {
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('projects').classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+</script>
 </body>
 </html>
