@@ -1473,6 +1473,7 @@
     const SUPABASE_URL = "https://qtyongzelnmcbamrquyn.supabase.co";
     const SUPABASE_KEY = "sb_publishable_ywKJaxIF6Zh5_kcgqDLH_A_i0ZceWYC";
     const guestbookForm = document.getElementById("guestbookForm");
+    const guestbookNameInput = guestbookForm.elements.name;
     const guestbookList = document.getElementById("guestbookList");
     const guestbookStatus = document.getElementById("guestbookStatus");
     const guestbookSubmit = document.getElementById("guestbookSubmit");
@@ -1547,19 +1548,14 @@
 
       if (form.get("website")) return;
 
-      if (localStorage.getItem("guestbook:signed") === "true") {
-        guestbookStatus.textContent = "you already signed this guestbook.";
-        guestbookSubmit.disabled = true;
-        return;
-      }
-
       const lastPost = Number(localStorage.getItem("guestbook:lastPost") || 0);
       if (Date.now() - lastPost < 30000) {
         guestbookStatus.textContent = "slow down, ghost. try again in a bit.";
         return;
       }
 
-      const name = cleanText(String(form.get("name") || "stranger"), 18);
+      const savedName = localStorage.getItem("guestbook:name");
+      const name = savedName || cleanText(String(form.get("name") || "stranger"), 18);
       const message = cleanText(String(form.get("message") || ""), 80);
       const reaction = cleanText(String(form.get("reaction") || "✦"), 2);
 
@@ -1580,15 +1576,22 @@
 
         if (!response.ok) throw new Error("insert failed");
         localStorage.setItem("guestbook:lastPost", String(Date.now()));
-        localStorage.setItem("guestbook:signed", "true");
+        localStorage.setItem("guestbook:name", name);
         guestbookForm.reset();
-        guestbookSubmit.disabled = true;
+        lockGuestbookName(name);
         await loadGuestbook();
       } catch {
         guestbookStatus.textContent = "could not sign - database setup pending.";
       } finally {
         guestbookSubmit.disabled = false;
       }
+    }
+
+    function lockGuestbookName(name) {
+      guestbookNameInput.value = name;
+      guestbookNameInput.disabled = true;
+      guestbookNameInput.title = "name locked on this browser";
+      guestbookStatus.textContent = `posting as ${name}`;
     }
 
     function statusLabel(status) {
@@ -1780,10 +1783,8 @@
     buildPlaylist();
     guestbookForm.addEventListener("submit", signGuestbook);
     loadGuestbook();
-    if (localStorage.getItem("guestbook:signed") === "true") {
-      guestbookSubmit.disabled = true;
-      guestbookStatus.textContent = "you already signed this guestbook.";
-    }
+    const savedGuestbookName = localStorage.getItem("guestbook:name");
+    if (savedGuestbookName) lockGuestbookName(savedGuestbookName);
     loadDiscordPresence();
     setInterval(loadDiscordPresence, 30000);
   </script>
