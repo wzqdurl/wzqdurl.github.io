@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4riis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+    }
+    .container {
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.1);
+      object-fit: cover;
+      margin-bottom: 16px;
+      transition: border-color 0.3s;
+    }
+    .avatar:hover { border-color: rgba(99, 102, 241, 0.6); }
+    .name {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .handle {
+      font-size: 14px;
+      color: #71717a;
+      margin-bottom: 16px;
+    }
+    .handle span { color: #818cf8; }
+    .bio {
+      font-size: 14px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      padding: 0 12px;
+    }
+    .links { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #e4e4e7;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+    }
+    .link-btn:hover {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+    }
+    .link-btn i { font-size: 18px; width: 20px; }
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .socials a {
+      color: #52525b;
+      font-size: 22px;
+      transition: all 0.25s;
+    }
+    .socials a:hover { color: #818cf8; transform: translateY(-2px); }
+    .footer {
+      font-size: 12px;
+      color: #3f3f46;
+    }
+    .music-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #71717a;
+    }
+    .music-bar i { color: #22c55e; font-size: 14px; }
+    .bars {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 16px;
+    }
+    .bars span {
+      width: 3px;
+      background: #22c55e;
+      border-radius: 2px;
+      animation: bars 1.2s ease-in-out infinite;
+    }
+    .bars span:nth-child(1) { height: 6px; animation-delay: 0s; }
+    .bars span:nth-child(2) { height: 12px; animation-delay: 0.2s; }
+    .bars span:nth-child(3) { height: 8px; animation-delay: 0.4s; }
+    .bars span:nth-child(4) { height: 14px; animation-delay: 0.6s; }
+    @keyframes bars {
+      0%, 100% { transform: scaleY(0.5); }
+      50% { transform: scaleY(1); }
+    }
+    @media (max-width: 480px) {
+      .container { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img class="avatar" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=4riis" alt="avatar">
+    <div class="name">4riis</div>
+    <div class="handle">@<span>4riis</span></div>
+    <div class="bio">desarrollador · creador · nyc</div>
+
+    <div class="music-bar">
+      <i class="fas fa-headphones"></i>
+      <div class="bars">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      escuchando algo bueno
+    </div>
+
+    <div class="links">
+      <a href="#" class="link-btn" target="_blank">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <i class="fab fa-twitter"></i> Twitter / X
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <i class="fab fa-discord"></i> Discord
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <i class="fab fa-instagram"></i> Instagram
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <i class="fas fa-globe"></i> Mi proyecto
+      </a>
+    </div>
+
+    <div class="socials">
+      <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="#" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+      <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+    </div>
+
+    <div class="footer">4riis.is-a.dev</div>
+  </div>
+</body>
+</html>
