@@ -1041,6 +1041,136 @@
       opacity: 0.74;
     }
 
+    .guestbook {
+      width: min(1030px, calc(100% - 76px));
+      margin: 0 auto 22px;
+      border: 1px solid rgba(224, 24, 34, 0.2);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(224, 24, 34, 0.12), transparent 28%),
+        rgba(255, 255, 255, 0.02);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.03), 0 0 40px rgba(123, 6, 16, 0.08);
+      overflow: hidden;
+    }
+
+    .guestbook-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 18px 20px 0;
+    }
+
+    .guestbook-head h3 {
+      margin: 0;
+      color: var(--red);
+      font: 700 13px/1 "Courier New", monospace;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .guestbook-head span {
+      color: var(--dim);
+      font: 11px/1 "Courier New", monospace;
+    }
+
+    .guestbook-form {
+      display: grid;
+      grid-template-columns: 150px 1fr 96px auto;
+      gap: 9px;
+      padding: 16px 20px;
+    }
+
+    .guestbook input,
+    .guestbook select {
+      min-height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 11px;
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--text);
+      padding: 0 12px;
+      font: 12px/1 "Courier New", monospace;
+      outline: 0;
+    }
+
+    .guestbook input:focus,
+    .guestbook select:focus {
+      border-color: rgba(224, 24, 34, 0.42);
+      box-shadow: 0 0 18px rgba(224, 24, 34, 0.08);
+    }
+
+    .guestbook button {
+      min-height: 42px;
+      border: 1px solid rgba(224, 24, 34, 0.42);
+      border-radius: 11px;
+      background: rgba(224, 24, 34, 0.08);
+      color: var(--red);
+      padding: 0 14px;
+      font: 700 12px/1 "Courier New", monospace;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .guestbook button:hover:not(:disabled) {
+      background: rgba(224, 24, 34, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .guestbook button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .honeypot { display: none; }
+
+    .guestbook-list {
+      display: grid;
+      gap: 9px;
+      padding: 0 20px 20px;
+    }
+
+    .guest-entry {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .guest-reaction {
+      color: var(--red);
+      font: 18px/1 "Courier New", monospace;
+    }
+
+    .guest-entry strong {
+      display: block;
+      color: var(--text);
+      font: 700 12px/1.2 "Courier New", monospace;
+      margin-bottom: 4px;
+    }
+
+    .guest-entry p {
+      margin: 0;
+      color: rgba(242, 240, 238, 0.72);
+      font: 13px/1.45 "Courier New", monospace;
+      word-break: break-word;
+    }
+
+    .guest-date {
+      color: var(--dim);
+      font: 10px/1 "Courier New", monospace;
+      white-space: nowrap;
+    }
+
+    .guestbook-status {
+      padding: 0 20px 16px;
+      color: var(--dim);
+      font: 11px/1.4 "Courier New", monospace;
+    }
+
     .facts {
       width: min(640px, calc(100% - 76px));
       margin: 0 auto 26px;
@@ -1084,6 +1214,9 @@
       .small-text { left: 230px; top: 154px; }
       .sections { grid-template-columns: 1fr; padding: 0 18px 18px; }
       .hero { padding: 0 18px 22px; }
+      .guestbook { width: calc(100% - 36px); }
+      .guestbook-form { grid-template-columns: 1fr 1fr; }
+      .guestbook-form input[name="message"] { grid-column: 1 / -1; }
       .facts { width: calc(100% - 36px); }
       footer { padding: 0 18px 20px; }
     }
@@ -1109,6 +1242,10 @@
       .wave { margin-right: 0; }
       .time { display: none; }
       .about-cat { display: none; }
+      .guestbook-form { grid-template-columns: 1fr; }
+      .guestbook-form input[name="message"] { grid-column: auto; }
+      .guest-entry { grid-template-columns: auto 1fr; }
+      .guest-date { grid-column: 2; }
       .fact { width: 100%; justify-content: center; }
       .fact + .fact { border-left: 0; border-top: 1px solid rgba(210, 58, 61, 0.24); }
     }
@@ -1268,6 +1405,28 @@
             </article>
           </section>
 
+          <section class="guestbook" id="guestbook">
+            <div class="guestbook-head">
+              <h3>guestbook.exe</h3>
+              <span>80 chars max / cooldown enabled</span>
+            </div>
+            <form class="guestbook-form" id="guestbookForm">
+              <input name="name" maxlength="18" autocomplete="off" placeholder="name" required>
+              <input name="message" maxlength="80" autocomplete="off" placeholder="leave a message" required>
+              <select name="reaction" aria-label="reaction">
+                <option value="✦">✦</option>
+                <option value="♡">♡</option>
+                <option value="☾">☾</option>
+                <option value="×">×</option>
+                <option value="𖤐">𖤐</option>
+              </select>
+              <input class="honeypot" name="website" tabindex="-1" autocomplete="off">
+              <button id="guestbookSubmit" type="submit">SIGN</button>
+            </form>
+            <div class="guestbook-status" id="guestbookStatus">loading messages...</div>
+            <div class="guestbook-list" id="guestbookList"></div>
+          </section>
+
           <div class="facts">
             <div class="fact"><b>♡</b> likes cats</div>
             <div class="fact"><b>♙</b> gamer</div>
@@ -1311,6 +1470,118 @@
     const presenceDot = document.getElementById("presenceDot");
     const presenceName = document.getElementById("presenceName");
     const presenceText = document.getElementById("presenceText");
+    const SUPABASE_URL = "https://qtyongzelnmcbamrquyn.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_ywKJaxIF6Zh5_kcgqDLH_A_i0ZceWYC";
+    const guestbookForm = document.getElementById("guestbookForm");
+    const guestbookList = document.getElementById("guestbookList");
+    const guestbookStatus = document.getElementById("guestbookStatus");
+    const guestbookSubmit = document.getElementById("guestbookSubmit");
+
+    function supabaseHeaders(extra = {}) {
+      return {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        ...extra
+      };
+    }
+
+    function cleanText(value, max) {
+      return value
+        .replace(/https?:\/\/\S+/gi, "")
+        .replace(/[<>]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, max);
+    }
+
+    function renderGuestbook(entries) {
+      guestbookList.innerHTML = "";
+
+      if (!entries.length) {
+        guestbookStatus.textContent = "no messages yet - be the first ghost.";
+        return;
+      }
+
+      guestbookStatus.textContent = "latest messages";
+      entries.forEach((entry) => {
+        const item = document.createElement("article");
+        item.className = "guest-entry";
+
+        const reaction = document.createElement("div");
+        reaction.className = "guest-reaction";
+        reaction.textContent = entry.reaction || "✦";
+
+        const body = document.createElement("div");
+        const name = document.createElement("strong");
+        name.textContent = entry.name || "stranger";
+        const message = document.createElement("p");
+        message.textContent = entry.message || "...";
+        body.append(name, message);
+
+        const date = document.createElement("div");
+        date.className = "guest-date";
+        date.textContent = new Date(entry.created_at).toLocaleDateString([], { month: "short", day: "numeric" });
+
+        item.append(reaction, body, date);
+        guestbookList.appendChild(item);
+      });
+    }
+
+    async function loadGuestbook() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/guestbook?select=name,message,reaction,created_at&order=created_at.desc&limit=6`, {
+          headers: supabaseHeaders()
+        });
+
+        if (!response.ok) throw new Error("guestbook unavailable");
+        renderGuestbook(await response.json());
+      } catch {
+        guestbookStatus.textContent = "guestbook locked - database setup pending.";
+      }
+    }
+
+    async function signGuestbook(event) {
+      event.preventDefault();
+      const form = new FormData(guestbookForm);
+
+      if (form.get("website")) return;
+
+      const lastPost = Number(localStorage.getItem("guestbook:lastPost") || 0);
+      if (Date.now() - lastPost < 30000) {
+        guestbookStatus.textContent = "slow down, ghost. try again in a bit.";
+        return;
+      }
+
+      const name = cleanText(String(form.get("name") || "stranger"), 18);
+      const message = cleanText(String(form.get("message") || ""), 80);
+      const reaction = cleanText(String(form.get("reaction") || "✦"), 2);
+
+      if (name.length < 2 || message.length < 2) {
+        guestbookStatus.textContent = "name/message too short.";
+        return;
+      }
+
+      guestbookSubmit.disabled = true;
+      guestbookStatus.textContent = "signing guestbook...";
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/guestbook`, {
+          method: "POST",
+          headers: supabaseHeaders({ Prefer: "return=minimal" }),
+          body: JSON.stringify({ name, message, reaction })
+        });
+
+        if (!response.ok) throw new Error("insert failed");
+        localStorage.setItem("guestbook:lastPost", String(Date.now()));
+        guestbookForm.reset();
+        await loadGuestbook();
+      } catch {
+        guestbookStatus.textContent = "could not sign - database setup pending.";
+      } finally {
+        guestbookSubmit.disabled = false;
+      }
+    }
 
     function statusLabel(status) {
       return {
@@ -1499,6 +1770,8 @@
     });
 
     buildPlaylist();
+    guestbookForm.addEventListener("submit", signGuestbook);
+    loadGuestbook();
     loadDiscordPresence();
     setInterval(loadDiscordPresence, 30000);
   </script>
