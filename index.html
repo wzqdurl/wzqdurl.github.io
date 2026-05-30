@@ -729,6 +729,79 @@
 
     .action svg { width: 23px; height: 23px; fill: currentColor; }
 
+    .presence-card {
+      width: min(100%, 560px);
+      margin: 16px auto 0;
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 15px;
+      border: 1px solid rgba(224, 24, 34, 0.22);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 14% 50%, rgba(224, 24, 34, 0.12), transparent 34%),
+        rgba(255, 255, 255, 0.025);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.04), 0 0 30px rgba(123, 6, 16, 0.08);
+      text-align: left;
+    }
+
+    .presence-avatar {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: url("avatar.jpg") center / cover no-repeat #090909;
+      box-shadow: 0 0 22px rgba(224, 24, 34, 0.13);
+    }
+
+    .presence-dot {
+      position: absolute;
+      right: -3px;
+      bottom: -3px;
+      width: 14px;
+      height: 14px;
+      border: 3px solid #080808;
+      border-radius: 50%;
+      background: #747f8d;
+    }
+
+    .presence-dot.online { background: #3ba55d; }
+    .presence-dot.idle { background: #faa81a; }
+    .presence-dot.dnd { background: #ed4245; }
+    .presence-dot.offline { background: #747f8d; }
+
+    .presence-main strong {
+      display: block;
+      color: var(--text);
+      font: 700 14px/1.2 "Courier New", monospace;
+      letter-spacing: 0.03em;
+    }
+
+    .presence-main span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font: 12px/1.35 "Courier New", monospace;
+    }
+
+    .presence-open {
+      color: var(--red);
+      text-decoration: none;
+      font: 700 12px/1 "Courier New", monospace;
+      border: 1px solid rgba(224, 24, 34, 0.28);
+      border-radius: 999px;
+      padding: 9px 11px;
+      background: rgba(224, 24, 34, 0.06);
+      transition: 160ms ease;
+    }
+
+    .presence-open:hover {
+      background: rgba(224, 24, 34, 0.14);
+      transform: translateY(-1px);
+    }
+
     .sections {
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
@@ -1066,7 +1139,7 @@
       <aside class="sidebar" aria-label="room navigation">
         <div class="logo">4riis</div>
         <a class="side-link active" href="#top" aria-label="home">☆</a>
-        <a class="side-link" href="https://discord.com/channels/@me" target="_blank" rel="noopener" aria-label="discord">✉</a>
+        <a class="side-link" href="https://discord.com/users/1426737376822296667" target="_blank" rel="noopener" aria-label="discord">✉</a>
         <a class="side-link" href="https://youtube.com/@sleewpi" target="_blank" rel="noopener" aria-label="youtube">♪</a>
         <div class="side-note">
           <div class="tiny-cat"></div>
@@ -1133,7 +1206,7 @@
             <div class="decor">✧ · ☾ · ✧</div>
 
             <div class="actions">
-              <a class="action" href="https://discord.com/channels/@me" target="_blank" rel="noopener">
+              <a class="action" href="https://discord.com/users/1426737376822296667" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 4.4A18.7 18.7 0 0 0 15.7 3l-.2.4c1.7.5 2.5 1.2 2.5 1.2a14 14 0 0 0-12 0S6.8 3.9 8.5 3.4L8.3 3a18.7 18.7 0 0 0-4.6 1.4C.8 8.8.2 13 .6 17.1A18.8 18.8 0 0 0 6.2 20l.7-1.1c-1.3-.5-1.9-1.2-1.9-1.2.2.1.5.3.6.3a15.5 15.5 0 0 0 12.8 0c.2 0 .4-.2.6-.3 0 0-.7.7-2 1.2l.7 1.1a18.8 18.8 0 0 0 5.7-2.9c.5-4.7-.8-8.8-3.1-12.7ZM8.3 15.1c-1.1 0-2-1-2-2.1s.9-2.1 2-2.1 2 1 2 2.1-.9 2.1-2 2.1Zm7.4 0c-1.1 0-2-1-2-2.1s.9-2.1 2-2.1 2 1 2 2.1-.9 2.1-2 2.1Z"/></svg>
                 Discord
               </a>
@@ -1142,6 +1215,15 @@
                 YouTube
               </a>
               <a class="action" href="https://sleewpi.surge.sh" target="_blank" rel="noopener">↗ Room</a>
+            </div>
+
+            <div class="presence-card" id="discordPresence">
+              <div class="presence-avatar" id="presenceAvatar"><span class="presence-dot offline" id="presenceDot"></span></div>
+              <div class="presence-main">
+                <strong id="presenceName">sleewpi.</strong>
+                <span id="presenceText">checking presence...</span>
+              </div>
+              <a class="presence-open" href="https://discord.com/users/1426737376822296667" target="_blank" rel="noopener">open</a>
             </div>
           </section>
 
@@ -1225,6 +1307,48 @@
     const time = document.getElementById("time");
     const wave = document.getElementById("wave");
     const playlist = document.getElementById("playlist");
+    const presenceAvatar = document.getElementById("presenceAvatar");
+    const presenceDot = document.getElementById("presenceDot");
+    const presenceName = document.getElementById("presenceName");
+    const presenceText = document.getElementById("presenceText");
+
+    function statusLabel(status) {
+      return {
+        online: "online",
+        idle: "idle",
+        dnd: "do not disturb",
+        offline: "offline"
+      }[status] || "offline";
+    }
+
+    async function loadDiscordPresence() {
+      try {
+        const response = await fetch("https://api.lanyard.rest/v1/users/1426737376822296667");
+        if (!response.ok) throw new Error("presence unavailable");
+        const { data } = await response.json();
+        const user = data.discord_user;
+        const status = data.discord_status || "offline";
+        const activity = data.activities?.find((item) => item.type === 0 || item.type === 2 || item.type === 4);
+        const avatar = user.avatar
+          ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+          : "avatar.jpg";
+
+        presenceAvatar.style.backgroundImage = `url("${avatar}")`;
+        presenceName.textContent = user.global_name || user.username || "sleewpi.";
+        presenceDot.className = `presence-dot ${status}`;
+
+        if (data.listening_to_spotify && data.spotify) {
+          presenceText.textContent = `${statusLabel(status)} - listening to ${data.spotify.song}`;
+        } else if (activity) {
+          presenceText.textContent = `${statusLabel(status)} - ${activity.name}`;
+        } else {
+          presenceText.textContent = `${statusLabel(status)} - lurking somewhere online`;
+        }
+      } catch {
+        presenceDot.className = "presence-dot offline";
+        presenceText.textContent = "presence unavailable - probably hidden";
+      }
+    }
 
     function formatTime(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
@@ -1374,6 +1498,8 @@
     });
 
     buildPlaylist();
+    loadDiscordPresence();
+    setInterval(loadDiscordPresence, 30000);
   </script>
 </body>
 </html>
