@@ -599,34 +599,40 @@
 
     .now-content {
       display: grid;
-      grid-template-columns: 92px 1fr;
+      grid-template-columns: 104px 1fr;
       gap: 20px;
       align-items: center;
       padding: 18px;
     }
 
     .album {
-      width: 92px;
-      height: 92px;
-      border: 1px solid rgba(210, 58, 61, 0.23);
+      width: 104px;
+      height: 104px;
+      border: 1px solid rgba(224, 24, 34, 0.32);
       border-radius: 12px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(242, 240, 238, 0.15), transparent 28%),
-        linear-gradient(135deg, transparent 0 44%, rgba(242, 240, 238, 0.25) 45% 46%, transparent 47%),
-        #0b0b0c;
+      background: #0b0b0c;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 28px rgba(123, 6, 16, 0.22), inset 0 1px rgba(255, 255, 255, 0.05);
     }
 
-    .album::before {
-      content: "cat";
+    .album img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(0.42) contrast(1.18) brightness(0.82) saturate(0.78);
+    }
+
+    .album::after {
+      content: "";
       position: absolute;
       inset: 0;
-      display: grid;
-      place-items: center;
-      color: rgba(242, 240, 238, 0.42);
-      font: 700 15px/1 "Courier New", monospace;
-      transform: rotate(-18deg);
+      background:
+        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(224, 24, 34, 0.18) 76%, rgba(0, 0, 0, 0.4) 100%),
+        repeating-linear-gradient(0deg, transparent 0 6px, rgba(255, 255, 255, 0.045) 7px 8px);
+      mix-blend-mode: screen;
+      pointer-events: none;
     }
 
     .track strong {
@@ -640,7 +646,7 @@
       display: block;
       color: var(--red);
       font: 700 13px/1 "Courier New", monospace;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .wave {
@@ -656,7 +662,12 @@
       height: 10px;
       background: var(--red);
       opacity: 0.86;
-      animation: wave 1.2s ease-in-out infinite;
+      transform-origin: center;
+      transition: height 120ms linear, opacity 120ms linear;
+    }
+
+    .wave.playing i {
+      animation: wave 0.72s ease-in-out infinite;
     }
 
     .wave i:nth-child(2n) { height: 19px; animation-delay: -0.2s; }
@@ -671,9 +682,98 @@
     .time {
       position: absolute;
       right: 18px;
-      bottom: 30px;
+      bottom: 78px;
       color: var(--muted);
       font: 12px/1 "Courier New", monospace;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .player-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(224, 24, 34, 0.34);
+      border-radius: 10px;
+      background: rgba(224, 24, 34, 0.06);
+      color: var(--red);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font: 700 13px/1 "Courier New", monospace;
+      transition: 160ms ease;
+    }
+
+    .player-btn:hover {
+      background: rgba(224, 24, 34, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .progress {
+      flex: 1 1 180px;
+      min-width: 160px;
+    }
+
+    .volume {
+      width: 92px;
+    }
+
+    input[type="range"] {
+      appearance: none;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(224, 24, 34, 0.82), rgba(255, 255, 255, 0.1));
+      outline: 0;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 14px rgba(224, 24, 34, 0.6);
+    }
+
+    .playlist {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 0 18px 16px;
+    }
+
+    .track-pill {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--muted);
+      font: 11px/1 "Courier New", monospace;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .track-pill.active,
+    .track-pill:hover {
+      color: var(--red);
+      border-color: rgba(224, 24, 34, 0.32);
+      background: rgba(224, 24, 34, 0.08);
+    }
+
+    #ytPlayer {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      left: -9999px;
+      bottom: 0;
+      opacity: 0.01;
+      pointer-events: none;
     }
 
     .spotify-line {
@@ -818,8 +918,8 @@
       h1 { font-size: 40px; }
       .tagline { font-size: 14px; letter-spacing: 0.08em; }
       .action { width: 100%; }
-      .now-content { grid-template-columns: 72px 1fr; gap: 13px; }
-      .album { width: 72px; height: 72px; }
+      .now-content { grid-template-columns: 76px 1fr; gap: 13px; }
+      .album { width: 76px; height: 76px; }
       .wave { margin-right: 0; }
       .time { display: none; }
       .about-cat { display: none; }
@@ -927,18 +1027,27 @@
           <section class="sections">
             <article class="box" style="position:relative">
               <div class="box-title">now playing</div>
+              <div id="ytPlayer" aria-hidden="true"></div>
               <div class="now-content">
-                <div class="album"></div>
+                <div class="album"><img id="cover" src="https://i.ytimg.com/vi/xWggTb45brM/hqdefault.jpg" alt="current song cover"></div>
                 <div class="track">
-                  <strong>Duvet</strong>
-                  <span>bôa</span>
-                  <div class="wave" aria-hidden="true">
+                  <strong id="songTitle">Toosie Slide</strong>
+                  <span id="songArtist">Drake</span>
+                  <div class="wave" id="wave" aria-hidden="true">
                     <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
                   </div>
-                  <div class="time">1:34 / 3:24</div>
+                  <div class="player-controls">
+                    <button class="player-btn" id="prevTrack" type="button" aria-label="previous song">‹</button>
+                    <button class="player-btn" id="playPause" type="button" aria-label="play or pause">▶</button>
+                    <button class="player-btn" id="nextTrack" type="button" aria-label="next song">›</button>
+                    <input class="progress" id="progress" type="range" min="0" max="100" value="0" aria-label="song progress">
+                    <input class="volume" id="volume" type="range" min="0" max="100" value="55" aria-label="volume">
+                  </div>
+                  <div class="time" id="time">0:00 / 0:00</div>
                 </div>
               </div>
-              <div class="spotify-line"><span class="spotify-dot">▶</span> playing on spotify</div>
+              <div class="playlist" id="playlist"></div>
+              <div class="spotify-line"><span class="spotify-dot">▶</span> playing via youtube embed</div>
             </article>
 
             <article class="box about">
@@ -972,8 +1081,30 @@
 
   <div class="toast" id="toast">discord copied: sleewpi.</div>
 
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     const toast = document.getElementById("toast");
+    const tracks = [
+      { title: "Toosie Slide", artist: "Drake", videoId: "xWggTb45brM" },
+      { title: "20 Min", artist: "Lil Uzi Vert", videoId: "bnFa4Mq5PAM" },
+      { title: "Dark Knight Dummo", artist: "Trippie Redd ft. Travis Scott", videoId: "lciXuSazbMI" }
+    ];
+
+    let player;
+    let currentTrack = 0;
+    let progressTimer;
+    let waveTimer;
+    let isSeeking = false;
+
+    const cover = document.getElementById("cover");
+    const songTitle = document.getElementById("songTitle");
+    const songArtist = document.getElementById("songArtist");
+    const playPause = document.getElementById("playPause");
+    const progress = document.getElementById("progress");
+    const volume = document.getElementById("volume");
+    const time = document.getElementById("time");
+    const wave = document.getElementById("wave");
+    const playlist = document.getElementById("playlist");
 
     async function copyDiscord() {
       try {
@@ -989,6 +1120,143 @@
 
     document.getElementById("copyDiscord").addEventListener("click", copyDiscord);
     document.getElementById("copyDiscordSide").addEventListener("click", copyDiscord);
+
+    function formatTime(seconds) {
+      if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+      return `${mins}:${secs}`;
+    }
+
+    function setTrackMeta(index) {
+      const track = tracks[index];
+      cover.src = `https://i.ytimg.com/vi/${track.videoId}/hqdefault.jpg`;
+      songTitle.textContent = track.title;
+      songArtist.textContent = track.artist;
+      document.querySelectorAll(".track-pill").forEach((pill, pillIndex) => {
+        pill.classList.toggle("active", pillIndex === index);
+      });
+    }
+
+    function buildPlaylist() {
+      playlist.innerHTML = "";
+      tracks.forEach((track, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "track-pill";
+        button.textContent = track.title;
+        button.addEventListener("click", () => loadTrack(index, true));
+        playlist.appendChild(button);
+      });
+      setTrackMeta(currentTrack);
+    }
+
+    function updateProgress() {
+      if (!player || typeof player.getCurrentTime !== "function") return;
+      const current = player.getCurrentTime() || 0;
+      const duration = player.getDuration() || 0;
+
+      if (!isSeeking && duration > 0) {
+        progress.value = Math.min(100, (current / duration) * 100);
+      }
+
+      time.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+    }
+
+    function animateWave(active) {
+      wave.classList.toggle("playing", active);
+      clearInterval(waveTimer);
+
+      if (!active) return;
+
+      const bars = [...wave.querySelectorAll("i")];
+      waveTimer = setInterval(() => {
+        bars.forEach((bar, index) => {
+          const beat = Math.sin(Date.now() / 120 + index * 0.72) * 0.5 + 0.5;
+          const random = Math.random() * 0.65;
+          const height = 5 + (beat + random) * 24;
+          bar.style.height = `${height}px`;
+          bar.style.opacity = `${0.35 + beat * 0.65}`;
+        });
+      }, 120);
+    }
+
+    function loadTrack(index, autoplay) {
+      currentTrack = (index + tracks.length) % tracks.length;
+      setTrackMeta(currentTrack);
+      progress.value = 0;
+      time.textContent = "0:00 / 0:00";
+
+      if (!player || typeof player.loadVideoById !== "function") return;
+
+      if (autoplay) {
+        player.loadVideoById(tracks[currentTrack].videoId);
+      } else {
+        player.cueVideoById(tracks[currentTrack].videoId);
+      }
+    }
+
+    function setPlayingUI(isPlaying) {
+      playPause.textContent = isPlaying ? "Ⅱ" : "▶";
+      animateWave(isPlaying);
+    }
+
+    function onYouTubeIframeAPIReady() {
+      buildPlaylist();
+      player = new YT.Player("ytPlayer", {
+        videoId: tracks[currentTrack].videoId,
+        playerVars: {
+          playsinline: 1,
+          controls: 0,
+          modestbranding: 1,
+          rel: 0
+        },
+        events: {
+          onReady: () => {
+            player.setVolume(Number(volume.value));
+            progressTimer = setInterval(updateProgress, 500);
+          },
+          onStateChange: (event) => {
+            const state = event.data;
+            setPlayingUI(state === YT.PlayerState.PLAYING);
+            if (state === YT.PlayerState.ENDED) loadTrack(currentTrack + 1, true);
+          }
+        }
+      });
+    }
+
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+    playPause.addEventListener("click", () => {
+      if (!player || typeof player.getPlayerState !== "function") return;
+      const state = player.getPlayerState();
+      if (state === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
+      } else {
+        player.playVideo();
+      }
+    });
+
+    document.getElementById("prevTrack").addEventListener("click", () => loadTrack(currentTrack - 1, true));
+    document.getElementById("nextTrack").addEventListener("click", () => loadTrack(currentTrack + 1, true));
+
+    progress.addEventListener("input", () => {
+      isSeeking = true;
+      const duration = player?.getDuration?.() || 0;
+      time.textContent = `${formatTime((Number(progress.value) / 100) * duration)} / ${formatTime(duration)}`;
+    });
+
+    progress.addEventListener("change", () => {
+      const duration = player?.getDuration?.() || 0;
+      if (duration > 0) player.seekTo((Number(progress.value) / 100) * duration, true);
+      isSeeking = false;
+    });
+
+    volume.addEventListener("input", () => {
+      if (player?.setVolume) player.setVolume(Number(volume.value));
+    });
+
+    buildPlaylist();
   </script>
 </body>
 </html>
